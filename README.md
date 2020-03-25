@@ -10,7 +10,7 @@ I modified the code a bit (line 45 or line 46, depending on whether a command is
 
 With the exe method (uac-silentcleanup-exe), powershell.exe is called along with Start-Process -NoNewWindow to attempt to hide any indication that a new program was launched.
 
-With the command method (uac-silentcleanup-command), cmd.exe /c is used to pass a quoted command string provided by the user.
+With the command method (uac-silentcleanup-command), cmd.exe /c is used to pass a command string provided by the user.
 
 Run it from CS with
 
